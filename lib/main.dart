@@ -1,4 +1,3 @@
-
 import 'dart:io';
 import 'dart:isolate';
 import 'dart:ui';
@@ -116,7 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
         new RegExp(r'(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+');
     List<String> urls =
         urlRegex.allMatches(value).map((m) => m.group(0)).toList();
-        print(urls);
+    print(urls);
     return RegExp(r"^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+")
         .hasMatch(urls[0]);
   }
@@ -140,12 +139,15 @@ class _MyHomePageState extends State<MyHomePage> {
     if (result['code'] == '200') {
       _videoLink = result['url'];
       FlutterToastManage().showToast("已找到视频,您可选择播放或者下载视频");
-    }else{
+    } else {
       FlutterToastManage().showToast(result['msg']);
     }
   }
 
   Future<bool> _onBackPressed() {
+                          if (_scaffoldKey.currentState.isDrawerOpen) {
+                       Navigator.of(context).pop();
+                      }
     return showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -156,12 +158,15 @@ class _MyHomePageState extends State<MyHomePage> {
               actions: <Widget>[
                 FlatButton(
                   child: Text('暂不'),
-                  onPressed: () => Navigator.pop(context, false),
+                  onPressed: () {
+                    Navigator.pop(context, false);
+                  },
                 ),
                 FlatButton(
-                  child: Text('确定'),
-                  onPressed: () => Navigator.pop(context, true),
-                ),
+                    child: Text('确定'),
+                    onPressed: () {
+                      Navigator.pop(context, true);
+                    }),
               ],
             ));
   }
