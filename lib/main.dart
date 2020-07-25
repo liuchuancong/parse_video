@@ -122,16 +122,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future _futureGetLink(String url) async {
     bool validate = isUrl(url);
-    print(validate);
     if (!validate) {
       FlutterToastManage().showToast("请输入正确的网址哦~");
       return;
     }
+    final urlRegex =
+        new RegExp(r'(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+');
+    List<String> urls =
+        urlRegex.allMatches(url).map((m) => m.group(0)).toList();
     setState(() {
       showLoading = true;
     });
     final Response response =
-        await HttpManager().get('video/', data: {'url': url});
+        await HttpManager().get('video/', data: {'url': urls[0]});
     setState(() {
       showLoading = false;
     });
@@ -145,9 +148,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<bool> _onBackPressed() {
-                          if (_scaffoldKey.currentState.isDrawerOpen) {
-                       Navigator.of(context).pop();
-                      }
+    if (_scaffoldKey.currentState.isDrawerOpen) {
+      Navigator.of(context).pop();
+    }
     return showDialog(
         context: context,
         builder: (context) => AlertDialog(
