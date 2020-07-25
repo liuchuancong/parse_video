@@ -21,6 +21,7 @@ import 'database/downloadVideoDatabase.dart';
 import 'database/readyToDownDatabase.dart';
 import 'model/currentDownLoad.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,6 +46,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return NeumorphicApp(
       debugShowCheckedModeBanner: false,
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('zh', 'CN'),
+        const Locale('en', 'US'),
+      ],
       title: '无水印视频下载',
       themeMode: ThemeMode.light,
       theme: NeumorphicThemeData(
@@ -254,8 +263,8 @@ class _MyHomePageState extends State<MyHomePage> {
               decoration: BoxDecoration(
                   image: DecorationImage(
                       image: AssetImage("assets/2.png"), fit: BoxFit.cover)),
-              accountEmail: Text('17792321552@163.com'),
-              accountName: Text('刘传聪'),
+              accountEmail: Text(''),
+              accountName: Text(''),
             ),
             SimpleListTile(
               title: '待下载列表',
@@ -274,8 +283,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () {
                 _openRoute(page: new DownLoadPage());
               },
-            ),
-            SimpleListTile(title: '本产品为个人学习作品,切勿商用', onTap: null),
+            )
           ],
         ),
       ),
@@ -367,7 +375,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     new Container(
                       child: Text(
-                        '短视频去水印下载，支持 抖音、Tiktok、快手、火山小视频、皮皮虾',
+                        '短视频去水印下载，支持 抖音、皮皮虾、火山、微视、微博、绿洲、最右、轻视频、ins、哔哩哔哩、快手、全民',
                         style: TextStyle(
                           fontSize: 20,
                         ),
