@@ -104,28 +104,34 @@ class __PageState extends State<_Page> {
       ),
     );
   }
-   ///验证URL
+
+  ///验证URL
   bool isUrl(String value) {
     final urlRegex =
         new RegExp(r'(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+');
     List<String> urls =
         urlRegex.allMatches(value).map((m) => m.group(0)).toList();
-        print(urls);
+    print(urls);
     return RegExp(r"^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+")
         .hasMatch(urls[0]);
   }
-   Future _futureGetLink(String url) async {
+
+  Future _futureGetLink(String url) async {
     bool validate = isUrl(url);
     String _videoLink = '';
     if (!validate) {
       FlutterToastManage().showToast("请输入正确的网址哦~");
       return;
     }
+    final urlRegex =
+        new RegExp(r'(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+');
+    List<String> urls =
+        urlRegex.allMatches(url).map((m) => m.group(0)).toList();
     setState(() {
       showLoading = true;
     });
     final Response response =
-        await HttpManager().get('video/', data: {'url': url});
+        await HttpManager().get('video/', data: {'url': urls[0]});
     setState(() {
       showLoading = false;
     });
@@ -133,7 +139,7 @@ class __PageState extends State<_Page> {
     if (result['code'] == '200') {
       _videoLink = result['url'];
       FlutterToastManage().showToast("已找到视频,您可选择播放或者下载视频");
-    }else{
+    } else {
       FlutterToastManage().showToast(result['msg']);
     }
     return _videoLink;

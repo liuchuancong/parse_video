@@ -289,7 +289,11 @@ class _MyHomePageState extends State<MyHomePage> {
               TextSearchField(
                 hint: "请输入视频链接",
                 onChanged: (text) {
-                  result = text;
+                  final urlRegex = new RegExp(
+                      r'(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+');
+                  List<String> urls =
+                      urlRegex.allMatches(text).map((m) => m.group(0)).toList();
+                  result = urls[0];
                 },
                 onSubmit: (text) {
                   if (lastPopTime == null ||
