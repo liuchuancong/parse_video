@@ -267,12 +267,23 @@ class __PageState extends State<_Page> {
       body: Stack(
         children: <Widget>[
           SafeArea(
-            child: NeumorphicBackground(
+            child: Container(
+              color: Colors.black,
               child: Column(
                 children: <Widget>[
                   _buildTopBar(context),
-                  SizedBox(height: 10),
-                  Expanded(child: ListView(children: tasksList)),
+                  Expanded(
+                    child: Container(
+                      decoration: new BoxDecoration(
+                        color: Colors.white,
+                        //设置四周圆角 角度
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20.0),
+                            topRight: Radius.circular(20.0)),
+                      ),
+                      child: ListView(children: tasksList),
+                    ),
+                  ),
                 ],
               ),
             ),

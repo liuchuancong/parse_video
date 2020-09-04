@@ -161,7 +161,7 @@ class SimpleListTile extends StatelessWidget {
             ),
           ),
           leading: leading == null ? null : leading,
-          trailing: trailing == null ? null : trailing,
+          trailing: trailing == null ? Icon(Icons.chevron_right) : trailing,
           onTap: onTap,
         ),
       ],

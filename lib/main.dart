@@ -130,6 +130,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future _futureGetLink(String url) async {
+    FocusScope.of(context).requestFocus(new FocusNode());     // 获取焦点
+     if(url==null || url.isEmpty){
+       FlutterToastManage().showToast("请输入网址~");
+      return;
+    }
     bool validate = isUrl(url);
     if (!validate) {
       FlutterToastManage().showToast("请输入正确的网址哦~");
@@ -175,7 +180,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                 ),
                 FlatButton(
-                    child: Text('确定'),
+                    child: Text('确定',style: TextStyle(
+                      color: Colors.red
+                    ),),
                     onPressed: () {
                       Navigator.pop(context, true);
                     }),
@@ -287,118 +294,124 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      body: Stack(
-        children: <Widget>[
-          ListView(
+      body: Container(
+        decoration: new BoxDecoration(
+          color: Colors.black,
+        ),
+        child: Container(
+          decoration: new BoxDecoration(
+            color: Colors.white,
+            //设置四周圆角 角度
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20.0),
+                topRight: Radius.circular(20.0)),
+          ),
+          child: Stack(
             children: <Widget>[
-              SizedBox(
-                height: 20,
-              ),
-              TextSearchField(
-                hint: "请输入视频链接",
-                onChanged: (text) {
-                  final urlRegex = new RegExp(
-                      r'(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+');
-                  List<String> urls =
-                      urlRegex.allMatches(text).map((m) => m.group(0)).toList();
-                  result = urls[0];
-                },
-                onSubmit: (text) {
-                  if (lastPopTime == null ||
-                      DateTime.now().difference(lastPopTime) >
-                          Duration(seconds: 2)) {
-                    lastPopTime = DateTime.now();
-                    _futureGetLink(text);
-                  } else {
-                    lastPopTime = DateTime.now();
-                  }
-                },
-                clear: () {
-                  result = '';
-                  _videoLink = '';
-                },
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Column(
+              ListView(
                 children: <Widget>[
-                  new Wrap(
-                    spacing: 10.0,
-                    runSpacing: 10.0,
+                  SizedBox(
+                    height: 20,
+                  ),
+                  TextSearchField(
+                    hint: "请输入视频链接",
+                    onChanged: (text) {
+                      final urlRegex = new RegExp(
+                          r'(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+');
+                      List<String> urls = urlRegex
+                          .allMatches(text)
+                          .map((m) => m.group(0))
+                          .toList();
+                      result = urls[0];
+                    },
+                    onSubmit: (text) {
+                      if (lastPopTime == null ||
+                          DateTime.now().difference(lastPopTime) >
+                              Duration(seconds: 2)) {
+                        lastPopTime = DateTime.now();
+                        _futureGetLink(text);
+                      } else {
+                        lastPopTime = DateTime.now();
+                      }
+                    },
+                    clear: () {
+                      result = '';
+                      _videoLink = '';
+                    },
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Column(
                     children: <Widget>[
-                      NiceButton(
-                        width: MediaQuery.of(context).size.width / 4,
-                        elevation: 8.0,
-                        radius: 52.0,
-                        text: "下载",
-                        fontSize: 12,
-                        background: Color(0xff000000),
-                        onPressed: () {
-                          _startDownLoad();
-                        },
-                      ),
-                      NiceButton(
-                        width: MediaQuery.of(context).size.width / 4,
-                        elevation: 8.0,
-                        radius: 52.0,
-                        text: "播放",
-                        fontSize: 12,
-                        background: Color(0xff000000),
-                        onPressed: () {
-                          _openRoute(page: new VideoScreen(url: _videoLink));
-                        },
-                      ),
-                      NiceButton(
-                        width: MediaQuery.of(context).size.width / 4,
-                        elevation: 8.0,
-                        radius: 52.0,
-                        fontSize: 12,
-                        text: "添加到待下载",
-                        background: Color(0xff000000),
-                        onPressed: () {
-                          _addVideoToReadyDownload();
-                        },
+                      new Wrap(
+                        spacing: 10.0,
+                        runSpacing: 10.0,
+                        children: <Widget>[
+                          NiceButton(
+                            width: MediaQuery.of(context).size.width / 4,
+                            elevation: 8.0,
+                            radius: 52.0,
+                            text: "下载",
+                            fontSize: 12,
+                            background: Color(0xff000000),
+                            onPressed: () {
+                              _startDownLoad();
+                            },
+                          ),
+                          NiceButton(
+                            width: MediaQuery.of(context).size.width / 4,
+                            elevation: 8.0,
+                            radius: 52.0,
+                            text: "播放",
+                            fontSize: 12,
+                            background: Color(0xff000000),
+                            onPressed: () {
+                              _openRoute(
+                                  page: new VideoScreen(url: _videoLink));
+                            },
+                          ),
+                          NiceButton(
+                            width: MediaQuery.of(context).size.width / 4,
+                            elevation: 8.0,
+                            radius: 52.0,
+                            fontSize: 12,
+                            text: "添加到待下载",
+                            background: Color(0xff000000),
+                            onPressed: () {
+                              _addVideoToReadyDownload();
+                            },
+                          ),
+                        ],
                       ),
                     ],
                   ),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 20.0),
+                    child: new Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        SizedBox(
+                          height: 20,
+                        ),
+                        new Container(
+                          child: Text(
+                            '短视频去水印下载，支持 抖音、皮皮虾、火山、微视、微博、绿洲、最右、轻视频、ins、哔哩哔哩、快手、全民。',
+                            style: TextStyle(
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
                 ],
               ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 20.0),
-                child: new Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 20,
-                    ),
-                    new Container(
-                      child: Text(
-                        '短视频去水印下载，支持 抖音、皮皮虾、火山、微视、微博、绿洲、最右、轻视频、ins、哔哩哔哩、快手、全民',
-                        style: TextStyle(
-                          fontSize: 20,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    new Container(
-                      child: Text(
-                        '使用方法:复制视频链接,选择粘贴,然后点击搜索,待搜索完成后您可播放或者下载视频到您的手机。也可将复制的链接添加到待下载列表,wifi情况下下载。',
-                        style: TextStyle(
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              )
+              showLoading ? LoginLoading() : Container()
             ],
           ),
-          showLoading ? LoginLoading() : Container()
-        ],
+        ),
       ),
     );
   }
