@@ -275,18 +275,21 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             SimpleListTile(
               title: '待下载列表',
+              trailing: Icon(Icons.chevron_right),
               onTap: () {
                 _openRoute(page: new ReadyToDownPage());
               },
             ),
             SimpleListTile(
               title: '本地视频',
+              trailing: Icon(Icons.chevron_right),
               onTap: () {
                 _openRoute(page: new LocalVideoPage());
               },
             ),
             SimpleListTile(
               title: '我的下载',
+              trailing: Icon(Icons.chevron_right),
               onTap: () {
                 _openRoute(page: new DownLoadPage());
               },

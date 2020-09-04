@@ -244,20 +244,6 @@ class __PageState extends State<_Page> {
           ),
         ],
       );
-    } else {
-      await BottomSheetManage().showDownLoadBottomSheet(
-        context,
-        [
-          SimpleListTile(
-            title: '删除',
-            onTap: () {
-              Navigator.pop(context);
-              DownLoadInstance().delete(movie.taskId);
-              loadTasks(_selectedIndex);
-            },
-          ),
-        ],
-      );
     }
   }
 
