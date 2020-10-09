@@ -153,7 +153,8 @@ class _MyHomePageState extends State<MyHomePage> {
       showLoading = false;
     });
     Map result = Map.from(response.data);
-    if (result['code'] == '200') {
+    print(response.data);
+    if (result['code'] == 200) {
       _videoLink = result['url'];
       FlutterToastManage().showToast("已找到视频,您可选择播放或者下载视频");
     } else {
