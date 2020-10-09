@@ -124,7 +124,9 @@ class _MyHomePageState extends State<MyHomePage> {
         new RegExp(r'(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+');
     List<String> urls =
         urlRegex.allMatches(value).map((m) => m.group(0)).toList();
-    print(urls);
+        if(urls.length == 0){
+          return false;
+        }
     return RegExp(r"^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+")
         .hasMatch(urls[0]);
   }
@@ -326,7 +328,10 @@ class _MyHomePageState extends State<MyHomePage> {
                           .allMatches(text)
                           .map((m) => m.group(0))
                           .toList();
-                      result = urls[0];
+                          if(urls.length>0){
+                                                  result = urls[0];
+                          }
+
                     },
                     onSubmit: (text) {
                       if (lastPopTime == null ||

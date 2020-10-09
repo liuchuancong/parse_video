@@ -58,11 +58,13 @@ class _TextSearchFieldState extends State<TextSearchField> {
                   boxShape: NeumorphicBoxShape.stadium(),
                 ),
                 padding: EdgeInsets.symmetric(vertical: 2, horizontal: 18),
-                child: TextField(
+                child: Center(
+                  child:TextField(
                   onChanged: this.widget.onChanged,
                   controller: _controller,
                   decoration:
                       InputDecoration.collapsed(hintText: this.widget.hint),
+                ),
                 ),
               ),
             ),

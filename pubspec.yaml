@@ -28,7 +28,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.3
   android_path_provider: ^0.1.1
-  flutter_neumorphic: ^3.0.1
+  flutter_neumorphic: 3.0.1
   flutter_downloader: ^1.4.4
   provider: ^4.1.3
   permission_handler: ^5.0.1
