@@ -161,27 +161,32 @@ class __PageState extends State<_Page> {
     }
     tasks = (await FlutterDownloader.loadTasksWithRawQuery(query: query))!;
     List<DownloadTask> taskTemp = [];
-    for (var i = 0; i < tasks.length; i++) {
-      File file =
-          File(tasks[i].savedDir + Platform.pathSeparator + tasks[i].filename!);
-      bool exits = await file.exists();
-      if (exits) {
-        taskTemp.add(tasks[i]);
-      } else {
-        DownLoadInstance().delete(tasks[i].taskId);
+    if (tasks.isNotEmpty) {
+      for (var i = 0; i < tasks.length; i++) {
+        File file = File(
+            tasks[i].savedDir + Platform.pathSeparator + tasks[i].filename!);
+        bool exits = await file.exists();
+        if (exits) {
+          taskTemp.add(tasks[i]);
+        } else {
+          DownLoadInstance().delete(tasks[i].taskId);
+        }
       }
+      tasksList = taskTemp
+          .map((DownloadTask movie) => TaskListTile(
+                movie: movie,
+                refrish: () {
+                  loadTasks(_selectedIndex);
+                },
+                onPressed: () {
+                  showBottomOperateSheet(movie);
+                },
+              ))
+          .toList();
+    }else{
+      tasksList = [];
     }
-    tasksList = taskTemp
-        .map((DownloadTask movie) => TaskListTile(
-              movie: movie,
-              refrish: () {
-                loadTasks(_selectedIndex);
-              },
-              onPressed: () {
-                showBottomOperateSheet(movie);
-              },
-            ))
-        .toList();
+
     setState(() {
       _selectedIndex = index;
     });

@@ -30,7 +30,7 @@ dependencies:
   flashy_tab_bar2: ^0.0.4
   fijkplayer: ^0.10.1
   flutter_spinkit: ^5.1.0
-  flutter_downloader: ^1.7.2
+  flutter_downloader: ^1.7.3
   cupertino_icons: ^1.0.4
   flutter_neumorphic: ^3.2.0
   android_path_provider: ^0.3.0

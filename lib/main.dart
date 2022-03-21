@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const NeumorphicApp(
       debugShowCheckedModeBanner: false,
-      title: '无水印视频下载',
+      title: '去水印视频下载',
       themeMode: ThemeMode.light,
       theme: NeumorphicThemeData(
         baseColor: Color(0xFFFFFFFF),

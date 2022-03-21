@@ -5,4 +5,10 @@
              Flutter draws its first frame -->
         <item name="android:windowBackground">@drawable/launch_background</item>
     </style>
+    <string name="flutter_downloader_notification_started">开始下载</string>
+    <string name="flutter_downloader_notification_in_progress">正在下载</string>
+    <string name="flutter_downloader_notification_canceled">取消下载</string>
+    <string name="flutter_downloader_notification_failed">下载失败</string>
+    <string name="flutter_downloader_notification_complete">下载完成</string>
+    <string name="flutter_downloader_notification_paused">下载暂停</string>
 </resources>

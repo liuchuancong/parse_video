@@ -27,8 +27,8 @@ class DownLoadInstance {
       url: url,
       fileName: fileName + '.mp4',
       savedDir: downloadPath,
-      showNotification: false,
-      openFileFromNotification: false,
+      showNotification: true,
+      openFileFromNotification: true,
     );
     await DataBaseDownLoadListProvider.db
         .insetDB(taskId: taskId ?? '', movieName: fileName + '.mp4');
@@ -37,14 +37,14 @@ class DownLoadInstance {
   // 申请权限
   Future<void> requestPermission() async {
     // manageExternalStorage
-    var storageStatus = await Permission.storage.status;
-    if (storageStatus.isDenied) {
-      await Permission.storage.request();
-    }
-    var status = await Permission.manageExternalStorage.status;
-    if (status.isDenied) {
-      await Permission.manageExternalStorage.request();
-    }
+
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.storage,
+      Permission.accessMediaLocation,
+      Permission.manageExternalStorage,
+      Permission.camera,
+      Permission.notification
+    ].request();
   }
 
   Future<String> prepare() async {
@@ -56,6 +56,7 @@ class DownLoadInstance {
     if (!hasExisted) {
       savedDir.create();
     }
+    print(savedDir.path);
     return savedDir.path;
   }
 

@@ -140,6 +140,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  @pragma('vm:entry-point')
   static void downloadCallback(
       String id, DownloadTaskStatus status, int progress) {
     final SendPort? send =
@@ -150,7 +151,6 @@ class _HomePageState extends State<HomePage> {
   _portListen() {
     IsolateNameServer.registerPortWithName(
         _port.sendPort, 'downloader_send_port');
-    FlutterDownloader.registerCallback(downloadCallback);
     _port.listen((dynamic data) {
       String id = data[0];
       DownloadTaskStatus status = data[1];
@@ -158,6 +158,7 @@ class _HomePageState extends State<HomePage> {
       context.read<CurrentDownLoad>().setDownLoadAbleItem(
           DownLoadAbleItem(id: id, progress: progress, status: status));
     });
+    FlutterDownloader.registerCallback(downloadCallback);
   }
 
   Future<bool> _onBackPressed() async {
@@ -199,6 +200,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
+  void dispose() {
+    IsolateNameServer.removePortNameMapping('downloader_send_port');
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: _onBackPressed,
@@ -214,7 +221,7 @@ class _HomePageState extends State<HomePage> {
             },
           ),
           title: NeumorphicText(
-            "无水印视频下载",
+            "去水印视频下载",
             style: const NeumorphicStyle(
               depth: 4, //customize depth here
               color: Colors.white, //customize color here
