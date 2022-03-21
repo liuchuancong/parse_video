@@ -20,31 +20,25 @@ class DownLoadInstance {
     return _instance;
   }
 
-  Future<void> startDownLoad(String url, String fileName) async {
+  Future<void> startDownLoad(String url, String fileName,{bool fullFileName = false}) async {
     final downloadPath = await prepare();
     FlutterToastManage().showToast("正在下载");
     final taskId = await FlutterDownloader.enqueue(
       url: url,
-      fileName: fileName + '.mp4',
+      fileName: !fullFileName ? fileName + '.mp4' : fileName,
       savedDir: downloadPath,
       showNotification: true,
       openFileFromNotification: true,
     );
-    await DataBaseDownLoadListProvider.db
-        .insetDB(taskId: taskId ?? '', movieName: fileName + '.mp4');
+    await DataBaseDownLoadListProvider.db.insetDB(taskId: taskId ?? '', movieName: !fullFileName ? fileName + '.mp4' : fileName);
   }
 
   // 申请权限
   Future<void> requestPermission() async {
-    // manageExternalStorage
-
-    await [
-      Permission.storage,
-      Permission.accessMediaLocation,
-      Permission.manageExternalStorage,
-      Permission.camera,
-      Permission.notification
-    ].request();
+    var status = await Permission.storage.status;
+    if (status.isDenied) {
+      await Permission.storage.request();
+    }
   }
 
   Future<String> prepare() async {
@@ -68,6 +62,7 @@ class DownLoadInstance {
   }
 
   Future cancel(String taskId) async {
+     await DataBaseDownLoadListProvider.db.deleteMovieWithTaskId(taskId);
     FlutterDownloader.cancel(taskId: taskId);
   }
 

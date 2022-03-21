@@ -97,12 +97,14 @@ class _HomePageState extends State<HomePage> {
       showLoading = false;
       result = urlMatches.first ?? '';
     });
-    Map responseData = Map.from(response?.data);
-    if (responseData['code'] == 200) {
-      _videoLink = responseData['url'];
-      FlutterToastManage().showToast("已找到视频,您可选择播放或者下载视频");
-    } else {
-      FlutterToastManage().showToast(responseData['msg']);
+    if (response != null) {
+      Map responseData = Map.from(response.data);
+      if (responseData['code'] == 200) {
+        _videoLink = responseData['url'];
+        FlutterToastManage().showToast("已找到视频,您可选择播放或者下载视频");
+      } else {
+        FlutterToastManage().showToast(responseData['msg']);
+      }
     }
   }
 
@@ -201,7 +203,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
-    IsolateNameServer.removePortNameMapping('downloader_send_port');
     super.dispose();
   }
 

@@ -58,7 +58,7 @@ class DataBaseDownLoadListProvider {
   Future<bool> queryWithFileName(String fileName) async {
     var db = await dataBase;
     var result = await db.rawQuery(
-        "SELECT * FROM $table WHERE movie_name='${fileName.toString()}'");
+        "SELECT * FROM $table WHERE task_id='${fileName.toString()}'");
     List<DwonloadDBInfoMation> list = result.isNotEmpty
         ? result.map((movie) => DwonloadDBInfoMation.formMap(movie)).toList()
         : [];
@@ -67,7 +67,20 @@ class DataBaseDownLoadListProvider {
     }
     return true;
   }
-
+  Future<bool> deleteMovieWithTaskId(String taskId) async {
+    var db = await dataBase;
+    var result = await db.rawQuery(
+        "SELECT * FROM $table WHERE task_id='$taskId'");
+    List<DwonloadDBInfoMation> list = result.isNotEmpty ? result.map((movie) => DwonloadDBInfoMation.formMap(movie)).toList() : [];
+    if(list.isNotEmpty){
+      for (var item in list) {
+        int movieId = item.id;
+        await deleteMovieWithId(movieId);
+      }
+      return true;
+    }
+    return false;
+  }
   Future deleteMovieWithId(int movieId) async {
     var db = await dataBase;
     await db.rawQuery("DELETE FROM $table WHERE id=$movieId");
