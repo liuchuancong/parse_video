@@ -38,7 +38,7 @@ class DownLoadInstance {
   Future<void> requestPermission() async {
     // manageExternalStorage
 
-    Map<Permission, PermissionStatus> statuses = await [
+    await [
       Permission.storage,
       Permission.accessMediaLocation,
       Permission.manageExternalStorage,
@@ -56,7 +56,6 @@ class DownLoadInstance {
     if (!hasExisted) {
       savedDir.create();
     }
-    print(savedDir.path);
     return savedDir.path;
   }
 
