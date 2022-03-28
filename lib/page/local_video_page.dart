@@ -8,6 +8,7 @@ import 'package:parse_video/components/simple_list_tile.dart';
 import 'package:parse_video/database/download_video_database.dart';
 import 'package:parse_video/page/video_page.dart';
 import 'package:parse_video/plugin/download.dart';
+import 'package:share_plus/share_plus.dart';
 
 class LocalVideoPage extends StatefulWidget {
   const LocalVideoPage({Key? key}) : super(key: key);
@@ -95,7 +96,15 @@ class __PageState extends State<_Page> {
         video.movieName;
     _openRoute(page: VideoScreen(url: _localPath));
   }
-
+  _shareVideo(DwonloadDBInfoMation video) async{
+     String _moviesPath = await AndroidPathProvider.moviesPath;
+    String _localPath = _moviesPath +
+        Platform.pathSeparator +
+        'Downloads' +
+        Platform.pathSeparator +
+        video.movieName;
+    Share.shareFiles([_localPath]);
+  }
   _getLocalVideos() async {
     final List<DwonloadDBInfoMation> _playList =
         await DataBaseDownLoadListProvider.db.queryAll();
@@ -115,6 +124,11 @@ class __PageState extends State<_Page> {
                 icon: const Icon(Icons.play_circle_outline),
                 onPressed: () {
                   _playLocalFile(video);
+                }),
+            IconButton(
+                icon: const Icon(Icons.share),
+                onPressed: () {
+                  _shareVideo(video);
                 }),
           ],
         ),
@@ -166,7 +180,6 @@ class __PageState extends State<_Page> {
     return Scaffold(
       body: SafeArea(
         child: NeumorphicBackground(
-          backendColor: Colors.red,
           child: Column(
             children: <Widget>[
               _buildTopBar(context),

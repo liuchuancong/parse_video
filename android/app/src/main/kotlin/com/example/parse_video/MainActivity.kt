@@ -1,4 +1,4 @@
-package com.example.parse_video
+package com.sup.android.parse
 
 import io.flutter.embedding.android.FlutterActivity
 
