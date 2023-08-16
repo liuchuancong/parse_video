@@ -25,12 +25,12 @@ class DownLoadInstance {
     FlutterToastManage().showToast("正在下载");
     final taskId = await FlutterDownloader.enqueue(
       url: url,
-      fileName: !fullFileName ? fileName + '.mp4' : fileName,
+      fileName: !fullFileName ? '$fileName.mp4' : fileName,
       savedDir: downloadPath,
       showNotification: true,
       openFileFromNotification: true,
     );
-    await DataBaseDownLoadListProvider.db.insetDB(taskId: taskId ?? '', movieName: !fullFileName ? fileName + '.mp4' : fileName);
+    await DataBaseDownLoadListProvider.db.insetDB(taskId: taskId ?? '', movieName: !fullFileName ? '$fileName.mp4' : fileName);
   }
 
   // 申请权限
@@ -44,7 +44,7 @@ class DownLoadInstance {
   Future<String> prepare() async {
     await requestPermission();
     String moviesPath = await AndroidPathProvider.moviesPath;
-    String localPath = moviesPath + Platform.pathSeparator + 'Downloads';
+    String localPath = '$moviesPath${Platform.pathSeparator}Downloads';
     final savedDir = Directory(localPath);
     bool hasExisted = await savedDir.exists();
     if (!hasExisted) {

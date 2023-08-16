@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:android_path_provider/android_path_provider.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:parse_video/components/drawer_common_page.dart';
 import 'package:parse_video/components/simple_list_tile.dart';
 import 'package:parse_video/database/download_video_database.dart';
@@ -88,28 +88,20 @@ class __PageState extends State<_Page> {
   }
 
   void _playLocalFile(DwonloadDBInfoMation video) async {
-    String _moviesPath = await AndroidPathProvider.moviesPath;
-    String _localPath = _moviesPath +
-        Platform.pathSeparator +
-        'Downloads' +
-        Platform.pathSeparator +
-        video.movieName;
-    _openRoute(page: VideoScreen(url: _localPath));
+    String moviesPath = await AndroidPathProvider.moviesPath;
+    String localPath = '$moviesPath${Platform.pathSeparator}Downloads${Platform.pathSeparator}${video.movieName}';
+    _openRoute(page: VideoScreen(url: localPath));
   }
   _shareVideo(DwonloadDBInfoMation video) async{
-     String _moviesPath = await AndroidPathProvider.moviesPath;
-    String _localPath = _moviesPath +
-        Platform.pathSeparator +
-        'Downloads' +
-        Platform.pathSeparator +
-        video.movieName;
-    Share.shareFiles([_localPath]);
+     String moviesPath = await AndroidPathProvider.moviesPath;
+    String localPath = '$moviesPath${Platform.pathSeparator}Downloads${Platform.pathSeparator}${video.movieName}';
+    Share.shareXFiles ([XFile(localPath)]);
   }
   _getLocalVideos() async {
-    final List<DwonloadDBInfoMation> _playList =
+    final List<DwonloadDBInfoMation> playDownLoadList =
         await DataBaseDownLoadListProvider.db.queryAll();
-    allLocalFiles = _playList;
-    var tempList = _playList.map((video) {
+    allLocalFiles = playDownLoadList;
+    var tempList = playDownLoadList.map((video) {
       return SimpleListTile(
         title: video.movieName,
         trailing: Row(
@@ -143,8 +135,8 @@ class __PageState extends State<_Page> {
   Future _showDeleteDialog(DwonloadDBInfoMation video) async {
     AwesomeDialog(
       context: context,
-      animType: AnimType.SCALE,
-      dialogType: DialogType.NO_HEADER,
+      animType: AnimType.scale,
+      dialogType: DialogType.noHeader,
       body: Column(
         children: <Widget>[
           const SimpleListTile(

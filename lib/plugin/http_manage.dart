@@ -3,9 +3,9 @@ import 'package:dio/dio.dart';
 import 'flutter_toast_manage.dart';
 
 class HttpManager {
-  final String baseUrl = 'https://tenapi.cn/';
-  final int connectTimeOut = 10000;
-  final int receiveTimeOut = 10000;
+  final String baseUrl = 'https://tenapi.cn/v2/';
+  final int connectTimeOut = 10;
+  final int receiveTimeOut = 10;
 
   //单例模式
   static late HttpManager _instance;
@@ -23,9 +23,9 @@ class HttpManager {
     _options = BaseOptions(
         baseUrl: baseUrl,
         //连接时间为5秒
-        connectTimeout: connectTimeOut,
+        connectTimeout: Duration(seconds: connectTimeOut),
         //响应时间为3秒
-        receiveTimeout: receiveTimeOut,
+        receiveTimeout: Duration(seconds: receiveTimeOut),
         //设置请求头
         headers: {},
         responseType: ResponseType.json,
@@ -38,7 +38,7 @@ class HttpManager {
       return handler.next(options);
     }, onResponse: (response, handler) {
       return handler.next(response);
-    }, onError: (DioError e, handler) {
+    }, onError: (DioException  e, handler) {
       return handler.next(e);
     }));
   }
@@ -49,7 +49,7 @@ class HttpManager {
     try {
       response = await _dio.get(url,
           queryParameters: data, options: options, cancelToken: cancelToken);
-    } on DioError catch (e) {
+    } on DioException  catch (e) {
       formatError(e);
     }
     return response;
@@ -66,7 +66,7 @@ class HttpManager {
         cancelToken: cancelToken,
         data: data,
       );
-    } on DioError catch (e) {
+    } on DioException  catch (e) {
       formatError(e);
     }
     return response;
@@ -78,7 +78,7 @@ class HttpManager {
     try {
       response = await _dio.post(url,
           options: options, cancelToken: cancelToken, data: data);
-    } on DioError catch (e) {
+    } on DioException  catch (e) {
       formatError(e);
     }
     return response;
@@ -89,16 +89,16 @@ class HttpManager {
     token.cancel("cancelled");
   }
 
-  void formatError(DioError e) {
-    if (e.type == DioErrorType.connectTimeout) {
+  void formatError(DioException  e) {
+    if (e.type == DioExceptionType.connectionTimeout) {
       FlutterToastManage().showToast("连接超时");
-    } else if (e.type == DioErrorType.sendTimeout) {
+    } else if (e.type == DioExceptionType .sendTimeout) {
       FlutterToastManage().showToast("请求超时");
-    } else if (e.type == DioErrorType.receiveTimeout) {
+    } else if (e.type == DioExceptionType .receiveTimeout) {
       FlutterToastManage().showToast("响应超时");
-    } else if (e.type == DioErrorType.response) {
+    } else if (e.type == DioExceptionType.badResponse) {
       FlutterToastManage().showToast("出现异常");
-    } else if (e.type == DioErrorType.cancel) {
+    } else if (e.type == DioExceptionType .cancel) {
       FlutterToastManage().showToast("请求取消");
     } else {
       FlutterToastManage().showToast("未知错误");

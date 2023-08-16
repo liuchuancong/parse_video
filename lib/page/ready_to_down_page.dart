@@ -1,6 +1,8 @@
+import 'dart:convert';
+
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:parse_video/components/drawer_common_page.dart';
 import 'package:parse_video/components/loading.dart';
 import 'package:parse_video/components/simple_list_tile.dart';
@@ -77,10 +79,10 @@ class __PageState extends State<_Page> {
   }
 
   _getLocalMusics() async {
-    final List<ReadyDownLoad> _playList =
+    final List<ReadyDownLoad> playDownLoadList =
         await DataBaseReadyDownLoadProvider.db.queryAll();
-    allLocalFiles = _playList;
-    var tempList = _playList.map((video) {
+    allLocalFiles = playDownLoadList;
+    var tempList = playDownLoadList.map((video) {
       return SimpleListTile(
           title: video.url,
           trailing: Row(
@@ -116,7 +118,7 @@ class __PageState extends State<_Page> {
 
   Future _futureGetLink(String url) async {
     bool validate = isUrl(url);
-    String _videoLink = '';
+    String videoLink = '';
     if (!validate) {
       FlutterToastManage().showToast("请输入正确的网址哦~");
       return;
@@ -133,14 +135,17 @@ class __PageState extends State<_Page> {
     setState(() {
       showLoading = false;
     });
-    Map responseData = Map.from(response?.data);
-    if (responseData['code'] == 200) {
-      _videoLink = responseData['url'];
-      FlutterToastManage().showToast("已找到视频");
-    } else {
-      FlutterToastManage().showToast(responseData['msg']);
+
+    if (response != null) {
+      var responseData = jsonDecode(response.data);
+      if (responseData['code'] == 200) {
+        videoLink = responseData['data']['url'];
+        FlutterToastManage().showToast("已找到视频,您可选择播放或者下载视频");
+      } else {
+        FlutterToastManage().showToast(responseData['msg']);
+      }
     }
-    return _videoLink;
+    return videoLink;
   }
 
   _startDownLoad(ReadyDownLoad readyDownLoad) async {
@@ -154,7 +159,8 @@ class __PageState extends State<_Page> {
     });
 
     String fileName = urlArr.last;
-    bool hasDownLoad = await DataBaseDownLoadListProvider.db.queryWithFileName(fileName + '.mp4');
+    bool hasDownLoad = await DataBaseDownLoadListProvider.db
+        .queryWithFileName('$fileName.mp4');
     if (hasDownLoad) {
       FlutterToastManage().showToast("已经下载过该视频了哦~");
       _deleteLocalFile(readyDownLoad);
@@ -168,8 +174,8 @@ class __PageState extends State<_Page> {
   Future _showDeleteDialog(ReadyDownLoad video) async {
     AwesomeDialog(
       context: context,
-      animType: AnimType.SCALE,
-      dialogType: DialogType.NO_HEADER,
+      animType: AnimType.scale,
+      dialogType: DialogType.noHeader,
       body: Column(
         children: <Widget>[
           const SimpleListTile(
@@ -178,21 +184,21 @@ class __PageState extends State<_Page> {
           ),
           Row(mainAxisAlignment: MainAxisAlignment.end, children: [
             SizedBox(
-          width: 60,
-          child: TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('取消')),
+              width: 60,
+              child: TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('取消')),
             ),
             SizedBox(
-          width: 60,
-          child: TextButton(
-              onPressed: () {
-                _deleteLocalFile(video);
-                Navigator.of(context).pop();
-              },
-              child: const Text('确定')),
+              width: 60,
+              child: TextButton(
+                  onPressed: () {
+                    _deleteLocalFile(video);
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('确定')),
             ),
           ])
         ],

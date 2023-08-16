@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:parse_video/components/bottom_sheet.dart';
 import 'package:parse_video/components/drawer_common_page.dart';
 import 'package:parse_video/components/loading.dart';

@@ -20,9 +20,9 @@ class LoginLoading extends StatelessWidget {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5.0),
                 color: Colors.black.withOpacity(0.9)),
-            child: Row(
+            child: const Row(
               mainAxisAlignment: MainAxisAlignment.start,
-              children: const <Widget>[
+              children: <Widget>[
                 SizedBox(
                   width: 30,
                 ),

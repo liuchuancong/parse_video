@@ -1,9 +1,10 @@
+import 'dart:convert';
 import 'dart:isolate';
 import 'dart:ui';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:parse_video/components/loading.dart';
 import 'package:parse_video/components/nice_button.dart';
 import 'package:parse_video/components/simple_list_tile.dart';
@@ -98,9 +99,9 @@ class _HomePageState extends State<HomePage> {
       result = urlMatches.first ?? '';
     });
     if (response != null) {
-      Map responseData = Map.from(response.data);
+      var responseData = jsonDecode(response.data);
       if (responseData['code'] == 200) {
-        _videoLink = responseData['url'];
+        _videoLink = responseData['data']['url'];
         FlutterToastManage().showToast("已找到视频,您可选择播放或者下载视频");
       } else {
         FlutterToastManage().showToast(responseData['msg']);
@@ -120,7 +121,7 @@ class _HomePageState extends State<HomePage> {
 
     String fileName = urlArr.last;
     bool hasDownLoad = await DataBaseDownLoadListProvider.db
-        .queryWithFileName(fileName + '.mp4');
+        .queryWithFileName('$fileName.mp4');
     if (hasDownLoad) {
       FlutterToastManage().showToast("已经下载过该视频了哦~");
       return;
@@ -144,7 +145,7 @@ class _HomePageState extends State<HomePage> {
 
   @pragma('vm:entry-point')
   static void downloadCallback(
-      String id, DownloadTaskStatus status, int progress) {
+      String id, int status, int progress) {
     final SendPort? send =
         IsolateNameServer.lookupPortByName('downloader_send_port');
     send?.send([id, status, progress]);
@@ -155,10 +156,9 @@ class _HomePageState extends State<HomePage> {
         _port.sendPort, 'downloader_send_port');
     _port.listen((dynamic data) {
       String id = data[0];
-      DownloadTaskStatus status = data[1];
+      DownloadTaskStatus  status = data[1];
       int progress = data[2];
-      context.read<CurrentDownLoad>().setDownLoadAbleItem(
-          DownLoadAbleItem(id: id, progress: progress, status: status));
+      context.read<CurrentDownLoad>().setDownLoadAbleItem(DownLoadAbleItem(id: id, progress: progress, status: status));
     });
     FlutterDownloader.registerCallback(downloadCallback);
   }
@@ -348,10 +348,10 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Column(
+                      child: const Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const <Widget>[
+                        children: <Widget>[
                           SizedBox(
                             height: 20,
                           ),

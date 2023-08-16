@@ -1,5 +1,5 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:parse_video/components/nice_button.dart';
 
 class TextSearchField extends StatefulWidget {
@@ -16,10 +16,10 @@ class TextSearchField extends StatefulWidget {
       : super(key: key);
 
   @override
-  _TextSearchFieldState createState() => _TextSearchFieldState();
+  State<TextSearchField> createState() => TextSearchFieldState();
 }
 
-class _TextSearchFieldState extends State<TextSearchField> {
+class TextSearchFieldState extends State<TextSearchField> {
   late TextEditingController _controller;
   final double _height = 100.0;
   @override

@@ -1,4 +1,4 @@
-import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 
 class SimpleListTile extends StatelessWidget {
   const SimpleListTile({Key? key, this.title, this.onTap, this.leading, this.trailing}) : super(key: key);

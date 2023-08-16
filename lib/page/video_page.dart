@@ -6,13 +6,13 @@ class VideoScreen extends StatefulWidget {
   final String url;
   const VideoScreen({Key? key, required this.url}) : super(key: key);
   @override
-  _VideoScreenState createState() => _VideoScreenState();
+  State<VideoScreen> createState() => VideoScreenState();
 }
 
-class _VideoScreenState extends State<VideoScreen> {
+class VideoScreenState extends State<VideoScreen> {
   final FijkPlayer player = FijkPlayer();
 
-  _VideoScreenState();
+  VideoScreenState();
 
   @override
   void initState() {
@@ -60,13 +60,13 @@ class FijkAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return PreferredSize(
+      preferredSize: preferredSize,
       child: AppBar(
         title: Text(title),
         actions: actions,
         centerTitle: true,
         backgroundColor: Colors.black,
       ),
-      preferredSize: preferredSize,
     );
   }
 

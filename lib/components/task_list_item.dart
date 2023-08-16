@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:parse_video/model/current_down_load.dart';
 import 'package:provider/provider.dart';
 
@@ -16,10 +16,10 @@ class TaskListTile extends StatefulWidget {
       : super(key: key);
 
   @override
-  _TaskListTileState createState() => _TaskListTileState();
+  State<TaskListTile> createState() => TaskListTileState();
 }
 
-class _TaskListTileState extends State<TaskListTile> {
+class TaskListTileState extends State<TaskListTile> {
   String fileSize = '';
   @override
   void initState() {
@@ -119,17 +119,17 @@ class _TaskListTileState extends State<TaskListTile> {
               softWrap: false,
             ),
             subtitle: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 getConditions()
                     ? Text(
-                        fileSize + ' MB',
+                        '$fileSize MB',
                         softWrap: false,
                       )
                     : Container(),
                 _buildDownLoadStatus()
               ],
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
             ),
             onTap: widget.onPressed,
           ),

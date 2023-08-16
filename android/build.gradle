@@ -1,13 +1,16 @@
 buildscript {
-    ext.kotlin_version = '1.6.10'
+    ext.kotlin_version = '1.9.0'
     repositories {
         google()
         mavenCentral()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.0'
+        classpath 'com.android.tools.build:gradle:7.3.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+    configurations.classpath {
+        resolutionStrategy.activateDependencyLocking()
     }
 }
 
@@ -24,8 +27,13 @@ subprojects {
 }
 subprojects {
     project.evaluationDependsOn(':app')
+    dependencyLocking {
+        ignoredDependencies.add('io.flutter:*')
+        lockFile = file("${rootProject.projectDir}/project-${project.name}.lockfile")
+        lockAllConfigurations()
+    }
 }
 
-task clean(type: Delete) {
+tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
