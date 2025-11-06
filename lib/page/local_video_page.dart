@@ -184,6 +184,7 @@ class __PageState extends State<_Page> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: SafeArea(
         child: NeumorphicBackground(
           child: Column(

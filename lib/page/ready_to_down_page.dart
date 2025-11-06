@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:parse_video/plugin/download.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
@@ -132,7 +131,7 @@ class __PageState extends State<_Page> {
     });
 
     if (response != null) {
-      var responseData = jsonDecode(response.data);
+      var responseData = response.data;
       if (responseData['code'] == 200) {
         videoLink = responseData['data']['url'];
         FlutterToastManage().showToast("已找到视频,您可选择播放或者下载视频");
@@ -203,6 +202,7 @@ class __PageState extends State<_Page> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: SafeArea(
         child: NeumorphicBackground(
           backendColor: Colors.red,

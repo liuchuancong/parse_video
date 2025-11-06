@@ -1,5 +1,4 @@
 import 'dart:ui';
-import 'dart:convert';
 import 'dart:isolate';
 import 'package:dio/dio.dart';
 import 'package:provider/provider.dart';
@@ -94,7 +93,7 @@ class _HomePageState extends State<HomePage> {
       result = urlMatches.first ?? '';
     });
     if (response != null) {
-      var responseData = jsonDecode(response.data);
+      var responseData = response.data;
       if (responseData['code'] == 200) {
         _videoLink = responseData['data']['url'];
         FlutterToastManage().showToast("已找到视频,您可选择播放或者下载视频");
