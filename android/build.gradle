@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '2.0.20'
+    ext.kotlin_version = '2.1.0'
     repositories {
         google()
         mavenCentral()
@@ -19,13 +19,32 @@ allprojects {
 }
 
 rootProject.buildDir = '../build'
+
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
-subprojects {
-    project.evaluationDependsOn(':app')
-}
 
+subprojects {
+    pluginManager.withPlugin('com.android.application') {
+        android {
+            if (namespace == null || namespace.toString().trim().isEmpty()) {
+                if (project.group != null) {
+                    namespace = project.group.toString()
+                }
+            }
+        }
+    }
+
+    pluginManager.withPlugin('com.android.library') {
+        android {
+            if (namespace == null || namespace.toString().trim().isEmpty()) {
+                if (project.group != null) {
+                    namespace = project.group.toString()
+                }
+            }
+        }
+    }
+}
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }

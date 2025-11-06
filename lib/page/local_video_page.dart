@@ -1,14 +1,13 @@
 import 'dart:io';
 import 'package:share_plus/share_plus.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:parse_video/page/video_page.dart';
 import 'package:parse_video/plugin/download.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:parse_video/components/simple_list_tile.dart';
 import 'package:parse_video/components/drawer_common_page.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
-import 'package:android_path_provider/android_path_provider.dart';
 import 'package:parse_video/database/download_video_database.dart';
-
 
 class LocalVideoPage extends StatefulWidget {
   const LocalVideoPage({Key? key}) : super(key: key);
@@ -72,8 +71,8 @@ class __PageState extends State<_Page> {
 
   void _openRoute({required Widget page}) {
     //打开B路由
-    Navigator.push(context, PageRouteBuilder(pageBuilder: (BuildContext context,
-        Animation<double> animation, Animation secondaryAnimation) {
+    Navigator.push(context, PageRouteBuilder(
+        pageBuilder: (BuildContext context, Animation<double> animation, Animation secondaryAnimation) {
       return FadeTransition(
         opacity: animation,
         child: page,
@@ -87,21 +86,34 @@ class __PageState extends State<_Page> {
     _getLocalVideos();
   }
 
+  Future<String?> getAndroidMoviesPath() async {
+    if (Platform.isAndroid) {
+      final directories = await getExternalStorageDirectories(
+        type: StorageDirectory.movies,
+      );
+      return directories?.first.path;
+    }
+    return null;
+  }
+
   void _playLocalFile(DwonloadDBInfoMation video) async {
-    String moviesPath = await AndroidPathProvider.moviesPath;
+    final appSupportDir = await getApplicationSupportDirectory();
+    final myMoviesDir = Directory('${appSupportDir.path}/my_movies');
+    String moviesPath = await getAndroidMoviesPath() ?? myMoviesDir.path;
     String localPath = '$moviesPath${Platform.pathSeparator}Downloads${Platform.pathSeparator}${video.movieName}';
     _openRoute(page: VideoScreen(url: localPath));
   }
-  Future<void> _shareVideo(DwonloadDBInfoMation video) async{
-     String moviesPath = await AndroidPathProvider.moviesPath;
+
+  Future<void> _shareVideo(DwonloadDBInfoMation video) async {
+    final appSupportDir = await getApplicationSupportDirectory();
+    final myMoviesDir = Directory('${appSupportDir.path}/my_movies');
+    String moviesPath = await getAndroidMoviesPath() ?? myMoviesDir.path;
     String localPath = '$moviesPath${Platform.pathSeparator}Downloads${Platform.pathSeparator}${video.movieName}';
-    SharePlus.instance.share(ShareParams(
-      files: [XFile(localPath)]
-    ));
+    SharePlus.instance.share(ShareParams(files: [XFile(localPath)]));
   }
+
   Future<void> _getLocalVideos() async {
-    final List<DwonloadDBInfoMation> playDownLoadList =
-        await DataBaseDownLoadListProvider.db.queryAll();
+    final List<DwonloadDBInfoMation> playDownLoadList = await DataBaseDownLoadListProvider.db.queryAll();
     allLocalFiles = playDownLoadList;
     var tempList = playDownLoadList.map((video) {
       return SimpleListTile(
@@ -186,14 +198,10 @@ class __PageState extends State<_Page> {
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     //设置四周圆角 角度
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20.0),
-                        topRight: Radius.circular(20.0)),
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
                   ),
                   child: ListView(
-                    children:
-                        ListTile.divideTiles(tiles: playList, context: context)
-                            .toList(),
+                    children: ListTile.divideTiles(tiles: playList, context: context).toList(),
                   ),
                 ),
               )),

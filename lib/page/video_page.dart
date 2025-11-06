@@ -1,5 +1,5 @@
-import 'package:fijkplayer/fijkplayer.dart';
 import 'package:flutter/material.dart';
+import 'package:fijkplayer_android/fijkplayer.dart';
 
 // import 'custom_ui.dart';
 class VideoScreen extends StatefulWidget {
@@ -31,7 +31,10 @@ class VideoScreenState extends State<VideoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("播放"),backgroundColor: const Color.fromARGB(255, 0, 8, 12),),
+      appBar: AppBar(
+        title: const Text("播放"),
+        backgroundColor: const Color.fromARGB(255, 0, 8, 12),
+      ),
       body: Center(
         child: FijkView(
           color: Colors.black,
@@ -51,8 +54,7 @@ class VideoScreenState extends State<VideoScreen> {
 }
 
 class FijkAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const FijkAppBar({Key? key, required this.title, required this.actions})
-      : super(key: key);
+  const FijkAppBar({Key? key, required this.title, required this.actions}) : super(key: key);
 
   final String title;
   final List<Widget> actions;

@@ -1,9 +1,9 @@
 import 'dart:io';
-import 'package:android_path_provider/android_path_provider.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:parse_video/database/download_video_database.dart';
-import 'package:parse_video/plugin/flutter_toast_manage.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:parse_video/plugin/flutter_toast_manage.dart';
+import 'package:parse_video/database/download_video_database.dart';
 
 class DownLoadInstance {
   // 单例公开访问点
@@ -20,7 +20,7 @@ class DownLoadInstance {
     return _instance;
   }
 
-  Future<void> startDownLoad(String url, String fileName,{bool fullFileName = false}) async {
+  Future<void> startDownLoad(String url, String fileName, {bool fullFileName = false}) async {
     final downloadPath = await prepare();
     FlutterToastManage().showToast("正在下载");
     final taskId = await FlutterDownloader.enqueue(
@@ -30,7 +30,8 @@ class DownLoadInstance {
       showNotification: true,
       openFileFromNotification: true,
     );
-    await DataBaseDownLoadListProvider.db.insetDB(taskId: taskId ?? '', movieName: !fullFileName ? '$fileName.mp4' : fileName);
+    await DataBaseDownLoadListProvider.db
+        .insetDB(taskId: taskId ?? '', movieName: !fullFileName ? '$fileName.mp4' : fileName);
   }
 
   // 申请权限
@@ -41,9 +42,21 @@ class DownLoadInstance {
     }
   }
 
+  Future<String?> getAndroidMoviesPath() async {
+    if (Platform.isAndroid) {
+      final directories = await getExternalStorageDirectories(
+        type: StorageDirectory.movies,
+      );
+      return directories?.first.path;
+    }
+    return null;
+  }
+
   Future<String> prepare() async {
     await requestPermission();
-    String moviesPath = await AndroidPathProvider.moviesPath;
+    final appSupportDir = await getApplicationSupportDirectory();
+    final myMoviesDir = Directory('${appSupportDir.path}/my_movies');
+    String moviesPath = await getAndroidMoviesPath() ?? myMoviesDir.path;
     String localPath = '$moviesPath${Platform.pathSeparator}Downloads';
     final savedDir = Directory(localPath);
     bool hasExisted = await savedDir.exists();
@@ -62,7 +75,7 @@ class DownLoadInstance {
   }
 
   Future cancel(String taskId) async {
-     await DataBaseDownLoadListProvider.db.deleteMovieWithTaskId(taskId);
+    await DataBaseDownLoadListProvider.db.deleteMovieWithTaskId(taskId);
     FlutterDownloader.cancel(taskId: taskId);
   }
 
