@@ -1,43 +1,44 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
 def localProperties = new Properties()
-def localPropertiesFile = rootProject.file('local.properties')
+def localPropertiesFile = rootProject.file("local.properties")
 if (localPropertiesFile.exists()) {
-    localPropertiesFile.withReader('UTF-8') { reader ->
+    localPropertiesFile.withReader("UTF-8") { reader ->
         localProperties.load(reader)
     }
 }
 
-def flutterRoot = localProperties.getProperty('flutter.sdk')
-if (flutterRoot == null) {
-    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
-}
-
-def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+def flutterVersionCode = localProperties.getProperty("flutter.versionCode")
 if (flutterVersionCode == null) {
-    flutterVersionCode = '1'
+    flutterVersionCode = "1"
 }
 
-def flutterVersionName = localProperties.getProperty('flutter.versionName')
+def flutterVersionName = localProperties.getProperty("flutter.versionName")
 if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
+    flutterVersionName = "1.0"
 }
-
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 def keystorePropertiesFile = rootProject.file("key.properties")
 def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-android {
-    compileSdkVersion 33 
-    ndkVersion "25.1.8937393" //flutter.ndkVersion
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
 
+android {
+    namespace "com.example.parse_video"
+    compileSdkVersion flutter.compileSdkVersion
+    ndkVersion flutter.ndkVersion
+
+    compileOptions {
+      sourceCompatibility JavaVersion.VERSION_17
+      targetCompatibility JavaVersion.VERSION_17
+    }
     kotlinOptions {
-        jvmTarget = '1.8'
+      jvmTarget = '17'
     }
 
     sourceSets {
@@ -45,42 +46,42 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.sup.android.parse"
-        minSdkVersion 21
+        applicationId "com.example.parse_video"
+        minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        multiDexEnabled true
     }
+
     signingConfigs {
         release {
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
             storeFile file(keystoreProperties['storeFile'])
             storePassword keystoreProperties['storePassword']
+            v1SigningEnabled true
+            v2SigningEnabled true
         }
     }
+
     buildTypes {
-        release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.release
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile(
-                    'proguard-android-optimize.txt'),
-                    'proguard-rules.pro'
-        }
         debug {
-            signingConfig signingConfigs.release
-        }
+                signingConfig signingConfigs.release
+            }
+            profile {
+                signingConfig signingConfigs.release
+            }
+            release {
+                signingConfig signingConfigs.release
+                minifyEnabled false  
+                shrinkResources false  
+                proguardFiles getDefaultProguardFile(
+                        'proguard-android-optimize.txt'),
+                        'proguard-rules.pro'
+            }
     }
 }
 
 flutter {
     source '../..'
-}
-
-dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }

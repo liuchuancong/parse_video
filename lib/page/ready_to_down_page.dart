@@ -1,16 +1,15 @@
 import 'dart:convert';
-
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
-import 'package:parse_video/components/drawer_common_page.dart';
-import 'package:parse_video/components/loading.dart';
-import 'package:parse_video/components/simple_list_tile.dart';
-import 'package:parse_video/database/download_video_database.dart';
-import 'package:parse_video/database/ready_to_down_database.dart';
 import 'package:parse_video/plugin/download.dart';
-import 'package:parse_video/plugin/flutter_toast_manage.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:parse_video/components/loading.dart';
 import 'package:parse_video/plugin/http_manage.dart';
+import 'package:parse_video/components/simple_list_tile.dart';
+import 'package:parse_video/plugin/flutter_toast_manage.dart';
+import 'package:parse_video/components/drawer_common_page.dart';
+import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
+import 'package:parse_video/database/ready_to_down_database.dart';
+import 'package:parse_video/database/download_video_database.dart';
 
 class ReadyToDownPage extends StatefulWidget {
   const ReadyToDownPage({Key? key}) : super(key: key);
@@ -73,14 +72,13 @@ class __PageState extends State<_Page> {
     _getLocalMusics();
   }
 
-  _deleteLocalFile(ReadyDownLoad video) async {
+  Future<void> _deleteLocalFile(ReadyDownLoad video) async {
     await DataBaseReadyDownLoadProvider.db.deleteMovieWithId(video.id);
     _getLocalMusics();
   }
 
-  _getLocalMusics() async {
-    final List<ReadyDownLoad> playDownLoadList =
-        await DataBaseReadyDownLoadProvider.db.queryAll();
+  Future<void> _getLocalMusics() async {
+    final List<ReadyDownLoad> playDownLoadList = await DataBaseReadyDownLoadProvider.db.queryAll();
     allLocalFiles = playDownLoadList;
     var tempList = playDownLoadList.map((video) {
       return SimpleListTile(
@@ -111,8 +109,7 @@ class __PageState extends State<_Page> {
   bool isUrl(String value) {
     final urlRegExp = RegExp(
         r"((https?:www\.)|(https?:\/\/)|(www\.))[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9]{1,6}(\/[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)?");
-    List<String?> urlMatches =
-        urlRegExp.allMatches(value).map((m) => m.group(0)).toList();
+    List<String?> urlMatches = urlRegExp.allMatches(value).map((m) => m.group(0)).toList();
     return urlMatches.isNotEmpty;
   }
 
@@ -125,13 +122,11 @@ class __PageState extends State<_Page> {
     }
     final urlRegExp = RegExp(
         r"((https?:www\.)|(https?:\/\/)|(www\.))[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9]{1,6}(\/[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)?");
-    List<String?> urlMatches =
-        urlRegExp.allMatches(url).map((m) => m.group(0)).toList();
+    List<String?> urlMatches = urlRegExp.allMatches(url).map((m) => m.group(0)).toList();
     setState(() {
       showLoading = true;
     });
-    Response? response =
-        await HttpManager().get('video/', data: {'url': urlMatches.first});
+    Response? response = await HttpManager().get('short_videos/', data: {'url': urlMatches.first});
     setState(() {
       showLoading = false;
     });
@@ -148,7 +143,7 @@ class __PageState extends State<_Page> {
     return videoLink;
   }
 
-  _startDownLoad(ReadyDownLoad readyDownLoad) async {
+  Future<void> _startDownLoad(ReadyDownLoad readyDownLoad) async {
     final url = await _futureGetLink(readyDownLoad.url);
     if (url.isEmpty) {
       return;
@@ -159,8 +154,7 @@ class __PageState extends State<_Page> {
     });
 
     String fileName = urlArr.last;
-    bool hasDownLoad = await DataBaseDownLoadListProvider.db
-        .queryWithFileName('$fileName.mp4');
+    bool hasDownLoad = await DataBaseDownLoadListProvider.db.queryWithFileName('$fileName.mp4');
     if (hasDownLoad) {
       FlutterToastManage().showToast("已经下载过该视频了哦~");
       _deleteLocalFile(readyDownLoad);
@@ -224,16 +218,12 @@ class __PageState extends State<_Page> {
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     //设置四周圆角 角度
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20.0),
-                        topRight: Radius.circular(20.0)),
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
                   ),
                   child: Stack(
                     children: <Widget>[
                       ListView(
-                        children: ListTile.divideTiles(
-                                tiles: playList, context: context)
-                            .toList(),
+                        children: ListTile.divideTiles(tiles: playList, context: context).toList(),
                       ),
                       showLoading ? const LoginLoading() : Container()
                     ],

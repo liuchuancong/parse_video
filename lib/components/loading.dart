@@ -12,14 +12,13 @@ class LoginLoading extends StatelessWidget {
       child: Container(
         width: double.infinity,
         height: double.infinity,
-        color: Colors.black12.withOpacity(0.2),
+        color: Colors.black12.withValues(alpha: 0.2),
         child: Center(
           child: Container(
-            width: MediaQuery.of(context).size.width * 0.7 ,
+            width: MediaQuery.of(context).size.width * 0.7,
             height: MediaQuery.of(context).size.width / 5,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5.0),
-                color: Colors.black.withOpacity(0.9)),
+            decoration:
+                BoxDecoration(borderRadius: BorderRadius.circular(5.0), color: Colors.black.withValues(alpha: .9)),
             child: const Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
@@ -36,10 +35,7 @@ class LoginLoading extends StatelessWidget {
                 ),
                 Text(
                   '正在努力查找视频中...',
-                  style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500),
+                  style: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w500),
                 )
               ],
             ),

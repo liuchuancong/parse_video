@@ -1,14 +1,14 @@
 import 'dart:io';
-import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
-import 'package:parse_video/components/bottom_sheet.dart';
-import 'package:parse_video/components/drawer_common_page.dart';
-import 'package:parse_video/components/loading.dart';
-import 'package:parse_video/components/task_list_item.dart';
-import 'package:parse_video/database/download_video_database.dart';
 import 'package:parse_video/plugin/download.dart';
+import 'package:parse_video/components/loading.dart';
+import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
+import 'package:parse_video/components/bottom_sheet.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:parse_video/components/task_list_item.dart';
 import 'package:parse_video/plugin/flutter_toast_manage.dart';
+import 'package:parse_video/components/drawer_common_page.dart';
+import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
+import 'package:parse_video/database/download_video_database.dart';
 
 class DownloadPage extends StatefulWidget {
   const DownloadPage({Key? key}) : super(key: key);
@@ -100,16 +100,14 @@ class __PageState extends State<_Page> {
   bool isUrl(String value) {
     final urlRegExp = RegExp(
         r"((https?:www\.)|(https?:\/\/)|(www\.))[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9]{1,6}(\/[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)?");
-    List<String?> urlMatches =
-        urlRegExp.allMatches(value).map((m) => m.group(0)).toList();
+    List<String?> urlMatches = urlRegExp.allMatches(value).map((m) => m.group(0)).toList();
     return urlMatches.isNotEmpty;
   }
 
-
-  _startDownLoad(DownloadTask  movie) async {
+  Future<void> _startDownLoad(DownloadTask movie) async {
     String? fileName = movie.filename;
     await DataBaseDownLoadListProvider.db.deleteMovieWithTaskId(movie.taskId);
-    await DownLoadInstance().startDownLoad(movie.url, fileName!,fullFileName: true);
+    await DownLoadInstance().startDownLoad(movie.url, fileName!, fullFileName: true);
     FlutterToastManage().showToast("正在下载中~");
     loadTasks(_selectedIndex);
   }
@@ -120,7 +118,7 @@ class __PageState extends State<_Page> {
     super.initState();
   }
 
-  loadTasks(int index) async {
+  Future<void> loadTasks(int index) async {
     String query = '';
     if (index == 0) {
       query = 'SELECT * FROM task WHERE status!=3';
@@ -131,8 +129,7 @@ class __PageState extends State<_Page> {
     List<DownloadTask> taskTemp = [];
     if (tasks.isNotEmpty) {
       for (var i = 0; i < tasks.length; i++) {
-        File file = File(
-            tasks[i].savedDir + Platform.pathSeparator + tasks[i].filename!);
+        File file = File(tasks[i].savedDir + Platform.pathSeparator + tasks[i].filename!);
         bool exits = await file.exists();
         if (exits) {
           taskTemp.add(tasks[i]);
@@ -160,7 +157,7 @@ class __PageState extends State<_Page> {
     });
   }
 
-  showBottomOperateSheet(DownloadTask movie) async {
+  Future<void> showBottomOperateSheet(DownloadTask movie) async {
     if (_selectedIndex == 0) {
       await BottomSheetManage().showDownLoadBottomSheet(
         context,
@@ -186,9 +183,7 @@ class __PageState extends State<_Page> {
             onTap: () {
               Navigator.pop(context);
               setState(() {});
-              DownLoadInstance()
-                  .resume(movie.taskId)
-                  .then((value) => {loadTasks(_selectedIndex)});
+              DownLoadInstance().resume(movie.taskId).then((value) => {loadTasks(_selectedIndex)});
             },
           ),
           SimpleListTile(
@@ -196,9 +191,7 @@ class __PageState extends State<_Page> {
             onTap: () {
               Navigator.pop(context);
               setState(() {});
-              DownLoadInstance()
-                  .remove(movie.taskId)
-                  .then((_) => {_startDownLoad(movie)});
+              DownLoadInstance().remove(movie.taskId).then((_) => {_startDownLoad(movie)});
             },
           ),
           SimpleListTile(
@@ -230,9 +223,8 @@ class __PageState extends State<_Page> {
                       decoration: const BoxDecoration(
                         color: Colors.white,
                         //设置四周圆角 角度
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(20.0),
-                            topRight: Radius.circular(20.0)),
+                        borderRadius:
+                            BorderRadius.only(topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
                       ),
                       child: ListView(children: tasksList),
                     ),

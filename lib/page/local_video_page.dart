@@ -1,14 +1,14 @@
 import 'dart:io';
-
-import 'package:android_path_provider/android_path_provider.dart';
-import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
-import 'package:parse_video/components/drawer_common_page.dart';
-import 'package:parse_video/components/simple_list_tile.dart';
-import 'package:parse_video/database/download_video_database.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:parse_video/page/video_page.dart';
 import 'package:parse_video/plugin/download.dart';
-import 'package:share_plus/share_plus.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:parse_video/components/simple_list_tile.dart';
+import 'package:parse_video/components/drawer_common_page.dart';
+import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
+import 'package:android_path_provider/android_path_provider.dart';
+import 'package:parse_video/database/download_video_database.dart';
+
 
 class LocalVideoPage extends StatefulWidget {
   const LocalVideoPage({Key? key}) : super(key: key);
@@ -70,7 +70,7 @@ class __PageState extends State<_Page> {
     _getLocalVideos();
   }
 
-  _openRoute({required Widget page}) {
+  void _openRoute({required Widget page}) {
     //打开B路由
     Navigator.push(context, PageRouteBuilder(pageBuilder: (BuildContext context,
         Animation<double> animation, Animation secondaryAnimation) {
@@ -81,7 +81,7 @@ class __PageState extends State<_Page> {
     }));
   }
 
-  _deleteLocalFile(DwonloadDBInfoMation video) async {
+  Future<void> _deleteLocalFile(DwonloadDBInfoMation video) async {
     await DataBaseDownLoadListProvider.db.deleteMovieWithId(video.id);
     await DownLoadInstance().delete(video.taskId);
     _getLocalVideos();
@@ -92,12 +92,14 @@ class __PageState extends State<_Page> {
     String localPath = '$moviesPath${Platform.pathSeparator}Downloads${Platform.pathSeparator}${video.movieName}';
     _openRoute(page: VideoScreen(url: localPath));
   }
-  _shareVideo(DwonloadDBInfoMation video) async{
+  Future<void> _shareVideo(DwonloadDBInfoMation video) async{
      String moviesPath = await AndroidPathProvider.moviesPath;
     String localPath = '$moviesPath${Platform.pathSeparator}Downloads${Platform.pathSeparator}${video.movieName}';
-    Share.shareXFiles ([XFile(localPath)]);
+    SharePlus.instance.share(ShareParams(
+      files: [XFile(localPath)]
+    ));
   }
-  _getLocalVideos() async {
+  Future<void> _getLocalVideos() async {
     final List<DwonloadDBInfoMation> playDownLoadList =
         await DataBaseDownLoadListProvider.db.queryAll();
     allLocalFiles = playDownLoadList;

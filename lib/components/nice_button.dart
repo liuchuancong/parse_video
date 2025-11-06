@@ -64,22 +64,14 @@ class NiceButton extends StatelessWidget {
   bool get existGradientColors => gradientColors.isNotEmpty;
 
   LinearGradient get linearGradient => existGradientColors
-      ? LinearGradient(
-          colors: gradientColors,
-          begin: Alignment.topLeft,
-          end: Alignment.topRight)
+      ? LinearGradient(colors: gradientColors, begin: Alignment.topLeft, end: Alignment.topRight)
       : LinearGradient(colors: [background, background]);
 
-  BoxDecoration get boxDecoration => BoxDecoration(
-      gradient: linearGradient,
-      borderRadius: BorderRadius.circular(radius),
-      color: background);
+  BoxDecoration get boxDecoration =>
+      BoxDecoration(gradient: linearGradient, borderRadius: BorderRadius.circular(radius), color: background);
 
-  TextStyle get textStyle => TextStyle(
-      fontFamily: 'Montserrat',
-      color: textColor,
-      fontSize: fontSize,
-      fontWeight: FontWeight.bold);
+  TextStyle get textStyle =>
+      TextStyle(fontFamily: 'Montserrat', color: textColor, fontSize: fontSize, fontWeight: FontWeight.bold);
 
   Widget createContainer(BuildContext context) => mini
       ? Container(
@@ -115,12 +107,11 @@ class NiceButton extends StatelessWidget {
     return TextButton(
       onPressed: onPressed,
       style: ButtonStyle(
-        overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
-        backgroundColor: MaterialStateProperty.all<Color>(background),
-        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(padding),
-        shape: MaterialStateProperty.all(
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius))),
-        elevation: MaterialStateProperty.all<double>(elevation),
+        overlayColor: WidgetStateProperty.all<Color>(Colors.transparent),
+        backgroundColor: WidgetStateProperty.all<Color>(background),
+        padding: WidgetStateProperty.all<EdgeInsetsGeometry>(padding),
+        shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius))),
+        elevation: WidgetStateProperty.all<double>(elevation),
       ),
       child: createContainer(context),
     );

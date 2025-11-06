@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.9.0'
+    ext.kotlin_version = '2.0.20'
     repositories {
         google()
         mavenCentral()
@@ -8,9 +8,6 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:7.3.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-    configurations.classpath {
-        resolutionStrategy.activateDependencyLocking()
     }
 }
 
@@ -27,11 +24,6 @@ subprojects {
 }
 subprojects {
     project.evaluationDependsOn(':app')
-    dependencyLocking {
-        ignoredDependencies.add('io.flutter:*')
-        lockFile = file("${rootProject.projectDir}/project-${project.name}.lockfile")
-        lockAllConfigurations()
-    }
 }
 
 tasks.register("clean", Delete) {

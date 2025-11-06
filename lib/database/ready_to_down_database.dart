@@ -6,8 +6,7 @@ import 'package:sqflite/sqflite.dart';
 class DataBaseReadyDownLoadProvider {
   DataBaseReadyDownLoadProvider._();
   static const table = 'ready_to_down_database';
-  static final DataBaseReadyDownLoadProvider db =
-      DataBaseReadyDownLoadProvider._();
+  static final DataBaseReadyDownLoadProvider db = DataBaseReadyDownLoadProvider._();
   static Database? _database;
   Future<Database> get dataBase async {
     if (_database != null) {
@@ -17,7 +16,7 @@ class DataBaseReadyDownLoadProvider {
     return _database!;
   }
 
-  initializeDB() async {
+  Future<Database> initializeDB() async {
     var databasesPath = await getDatabasesPath();
     String path = join(databasesPath, "ready_to_download_list.db");
     return await openDatabase(
@@ -47,19 +46,14 @@ class DataBaseReadyDownLoadProvider {
   Future<List<ReadyDownLoad>> queryAll() async {
     var db = await dataBase;
     var result = await db.query(table);
-    List<ReadyDownLoad> list = result.isNotEmpty
-        ? result.map((movie) => ReadyDownLoad.formMap(movie)).toList()
-        : [];
+    List<ReadyDownLoad> list = result.isNotEmpty ? result.map((movie) => ReadyDownLoad.formMap(movie)).toList() : [];
     return list;
   }
 
   Future<bool> queryWithUrl(String url) async {
     var db = await dataBase;
-    var result =
-        await db.rawQuery("SELECT * FROM $table WHERE url='${url.toString()}'");
-    List<ReadyDownLoad> list = result.isNotEmpty
-        ? result.map((movie) => ReadyDownLoad.formMap(movie)).toList()
-        : [];
+    var result = await db.rawQuery("SELECT * FROM $table WHERE url='${url.toString()}'");
+    List<ReadyDownLoad> list = result.isNotEmpty ? result.map((movie) => ReadyDownLoad.formMap(movie)).toList() : [];
     if (list.isEmpty) {
       return false;
     }

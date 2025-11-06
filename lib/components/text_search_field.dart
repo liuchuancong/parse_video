@@ -1,19 +1,13 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:parse_video/components/nice_button.dart';
+import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 
 class TextSearchField extends StatefulWidget {
   final String? hint;
   final ValueChanged<String>? onChanged;
   final ValueChanged<String>? onSubmit;
   final Function? clear;
-  const TextSearchField(
-      {Key? key,
-      @required this.hint,
-      this.onChanged,
-      this.onSubmit,
-      this.clear})
-      : super(key: key);
+  const TextSearchField({Key? key, @required this.hint, this.onChanged, this.onSubmit, this.clear}) : super(key: key);
 
   @override
   State<TextSearchField> createState() => TextSearchFieldState();
@@ -29,22 +23,20 @@ class TextSearchFieldState extends State<TextSearchField> {
   }
 
   ///使用异步调用获取返回值
-  getClipboardDatas() async {
-    ClipboardData?  clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
+  Future<void> getClipboardDatas() async {
+    ClipboardData? clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
     if (clipboardData != null) {
       setState(() {
         _controller.text = clipboardData.text!;
         widget.onChanged!(clipboardData.text ?? '');
-        _controller.selection = TextSelection.fromPosition(TextPosition(
-            affinity: TextAffinity.downstream,
-            offset: _controller.text.length));
+        _controller.selection = TextSelection.fromPosition(
+            TextPosition(affinity: TextAffinity.downstream, offset: _controller.text.length));
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-   
     return Column(
       children: <Widget>[
         Row(
@@ -55,21 +47,18 @@ class TextSearchFieldState extends State<TextSearchField> {
               padding: const EdgeInsets.symmetric(vertical: 20),
               height: _height,
               child: Neumorphic(
-                margin: const EdgeInsets.only(
-                    left: 18, right: 18, top: 2, bottom: 4),
+                margin: const EdgeInsets.only(left: 18, right: 18, top: 2, bottom: 4),
                 style: NeumorphicStyle(
                   color: Colors.white,
                   depth: NeumorphicTheme.embossDepth(context),
                   boxShape: const NeumorphicBoxShape.stadium(),
                 ),
-                padding:
-                    const EdgeInsets.symmetric(vertical: 2, horizontal: 18),
+                padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 18),
                 child: Center(
                   child: TextField(
                     onChanged: widget.onChanged,
                     controller: _controller,
-                    decoration:
-                        InputDecoration.collapsed(hintText: widget.hint),
+                    decoration: InputDecoration.collapsed(hintText: widget.hint),
                   ),
                 ),
               ),
@@ -93,7 +82,7 @@ class TextSearchFieldState extends State<TextSearchField> {
           runSpacing: 10.0,
           children: <Widget>[
             NiceButton(
-             width: MediaQuery.of(context).size.width / 3,
+              width: MediaQuery.of(context).size.width / 3,
               radius: 52.0,
               text: "粘贴",
               fontSize: 12,
@@ -103,7 +92,7 @@ class TextSearchFieldState extends State<TextSearchField> {
               },
             ),
             NiceButton(
-             width: MediaQuery.of(context).size.width / 3,
+              width: MediaQuery.of(context).size.width / 3,
               elevation: 8.0,
               radius: 52.0,
               text: "清空",
